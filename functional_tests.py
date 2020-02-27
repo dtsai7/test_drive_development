@@ -35,9 +35,7 @@ class NewVisitorTest(unittest.TestCase):
         rows = table.find_elements_by_tag_name('tr')
         self.assertTrue(any(row.text == '1:Buy milk' for row in rows))
 
-        self.fail('Finish the test')
-
-        #user is invited to enter a to-do item
+        self.fail('Finish the test.')
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
