@@ -7,10 +7,15 @@ class NewVisitorTest(unittest.TestCase):
 
     def setUp(self):
         self.browser = webdriver.Firefox()
-        self.browser.implicitly_wait(5)
+        # self.browser.implicitly_wait(5)
     
     def tearDown(self):
         self.browser.quit()
+    
+    def check_for_row_in_list_table(self, row_text):
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(row_text, [row.text for row in rows])
     
     def test_can_start_a_list_and_retrieve_it_later(self):
         #user checks to-do app homepage
@@ -31,10 +36,17 @@ class NewVisitorTest(unittest.TestCase):
         #when the user hits enter, the page updates
         inputbox.send_keys(Keys.ENTER)
         time.sleep(1)
+        self.check_for_row_in_list_table('1:Buy milk')
 
-        table = self.browser.find_element_by_id('id_list_table')
-        rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(any(row.text == '1:Buy milk' for row in rows), "New to-do item did not appear in table")
+        #the user is invited to add another item
+        inputbox =self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Do homework')
+        inputbox.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        #page updates and show both items on the lists
+        self.check_for_row_in_list_table('1:Buy milk')
+        self.check_for_row_in_list_table('2:Do homework')
 
         self.fail('Finish the test.')
 

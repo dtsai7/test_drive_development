@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from lists.views import home_page
 from django.template.loader import render_to_string
 
-class HomePageTes(TestCase):
+class HomePageTest(TestCase):
 
     def test_root_url_resolves_to_homepage_view(self):
         found = resolve('/')
@@ -19,6 +19,13 @@ class HomePageTes(TestCase):
         self.assertTrue(html.strip().endswith('</html>'))
 
         self.assertTemplateUsed(response, 'home.html')
-        
-
-
+    
+    def test_uses_home_page_(self):
+        response = self.client.get('/')
+        self.assertTemplateUsed(response, 'home.html')
+    
+    def test_can_save_a_POST_request(self):
+        response = self.client.post('/', data={'item_text':'a new list item'})
+        self.assertIn('a new list item', response.content.decode())
+        self.assertTemplateUsed(response, 'home.html')
+    
